@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+// import App from './App';
+// import AppTwo from './AppTwo';
 import * as serviceWorker from './serviceWorker';
+import AppAxes from './AppAxes';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    {/* <AppTwo /> */}
+    <AppAxes/>
   </React.StrictMode>,
   document.getElementById('root')
 );
