@@ -40,4 +40,9 @@
 svg{
   background-color: lightgrey;
   overflow: visible;
+  width: 100%;
+}
+
+#root{
+  padding: 0 50px;
 }

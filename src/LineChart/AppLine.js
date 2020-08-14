@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import "./App.css";
 import { select, line,curveCardinal } from "d3";
 
-function AppTwo() {
+function AppLine() {
   const svgRef = useRef();
   const [data, setData] = useState([23, 30, 45, 60, 15,65,70]);
 
@@ -36,4 +36,4 @@ function AppTwo() {
   );
 }
 
-export default AppTwo;
+export default AppLine;

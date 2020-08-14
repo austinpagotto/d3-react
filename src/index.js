@@ -2,15 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
-// import AppTwo from './AppTwo';
+// import AppLine from './AppLine';
 import * as serviceWorker from './serviceWorker';
-import AppAxes from './AppAxes';
+// import AppAxes from './LineChart/AppAxes';
+import AppBar from './BarChart/AppBar';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    {/* <AppTwo /> */}
-    <AppAxes/>
+    <AppBar/>
   </React.StrictMode>,
   document.getElementById('root')
 );

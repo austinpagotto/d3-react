@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 // import Face from './reactFace/Face'
-import "./App.css";
+import "../App.css";
 import { select, line, curveCardinal, axisBottom, scaleLinear,axisRight } from "d3";
 
 function AppAxes() {
