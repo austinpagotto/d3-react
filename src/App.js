@@ -1,46 +1,60 @@
 import React, { useRef, useEffect, useState } from "react";
-// import Face from './reactFace/Face'
+import ml5 from "ml5";
+import GaugeChart from "./GaugeChart/GaugeChart";
 import "./App.css";
-import { select } from "d3";
+import useInterval from "./Interval/useInterval";
+
+let classifier;
 
 function App() {
-  const svgRef = useRef();
-  const svgRef2 = useRef();
-  const [data, setData] = useState([23, 30, 45, 60, 15]);
+  const videoRef = useRef();
+  const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
+  const [shouldClassify, setShouldClassify] = useState(false);
 
   useEffect(() => {
-    console.log(svgRef);
-    const svg = select(svgRef.current);
-    const svg2 = select(svgRef2.current);
-    svg
-      .selectAll("circle")
-      .data(data)
-      .join("circle")
-      .attr("r", (value) => value)
-      .attr("cx", (value) => value * 2)
-      .attr("cy", (value) => value * 2)
-      .attr("stroke", "red");
-      svg2
-      .selectAll("circle")
-      .data(data)
-      .join("circle")
-      .attr("r", (value) => value)
-      .attr("cx", (value) => value * 2)
-      .attr("cy", (value) => value * 2)
-      .attr("stroke", "red");
-  }, [data]);
+    classifier = ml5.imageClassifier("./my-model/model.json", () => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        });
+    });
+  }, []);
+
+  useInterval(() => {
+    if (classifier && shouldClassify) {
+      classifier.classify(videoRef.current, (error, results) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        console.log(results[0].label);
+        results.sort((a, b) => a.label.localeCompare(b.label));
+        setGaugeData(results.map((entry) => entry.confidence));
+      });
+    }
+  }, 500);
   return (
-    <div className="App">
-      <svg ref={svgRef}></svg>
-      <button onClick={() => setData(data.map((value) => value + 5))}>
-        Update Data
+    <React.Fragment>
+      <h1>
+        {" "}
+        are you holding the mug <br />
+        <small>
+          [{gaugeData[0].toFixed(2)},{gaugeData[1].toFixed(2)}]
+        </small>
+      </h1>
+      <GaugeChart data={gaugeData} />
+      <button onClick={() => setShouldClassify(!shouldClassify)}>
+        {shouldClassify ? "Stop" : "Start"}
       </button>
-      <button onClick={() => setData(data.filter(value => value <= 35))}>
-        Filter Data
-      </button>
-      <svg ref={svgRef2}></svg>
-      {/* <Face/> */}
-    </div>
+      <video
+        ref={videoRef}
+        style={{ transform: "scale(-1,1)" }}
+        width="300"
+        height="150"
+      />
+    </React.Fragment>
   );
 }
 
