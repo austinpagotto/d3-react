@@ -1,61 +1,73 @@
-import React, { useRef, useEffect, useState } from "react";
-import ml5 from "ml5";
-import GaugeChart from "./GaugeChart/GaugeChart";
+import React, { useEffect, useState } from "react";
+import useInterval from "./Components/useInterval";
+import RacingBarChart from './Components/RacingBarChart'
 import "./App.css";
-import useInterval from "./Interval/useInterval";
 
-let classifier;
+const getRandomIndex = (array) => {
+  return Math.floor(array.length * Math.random());
+};
 
 function App() {
-  const videoRef = useRef();
-  const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
-  const [shouldClassify, setShouldClassify] = useState(false);
-
-  useEffect(() => {
-    classifier = ml5.imageClassifier("./my-model/model.json", () => {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then((stream) => {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        });
-    });
-  }, []);
+  const [iteration, setIteration] = useState(0);
+  const [start, setStart] = useState(false);
+  const [data, setData] = useState([
+    {
+      name: "alpha",
+      value: 10,
+      color: "#f4efd3",
+    },
+    {
+      name: "beta",
+      value: 15,
+      color: "#cccccc",
+    },
+    {
+      name: "charlie",
+      value: 20,
+      color: "#c2b0c9",
+    },
+    {
+      name: "delta",
+      value: 25,
+      color: "#9656a1",
+    },
+    {
+      name: "echo",
+      value: 30,
+      color: "#fa697c",
+    },
+    {
+      name: "foxtrot",
+      value: 35,
+      color: "#fcc169",
+    },
+  ]);
 
   useInterval(() => {
-    if (classifier && shouldClassify) {
-      classifier.classify(videoRef.current, (error, results) => {
-        if (error) {
-          console.log(error);
-          return;
-        }
-        console.log(results[0].label);
-        results.sort((a, b) => a.label.localeCompare(b.label));
-        setGaugeData(results.map((entry) => entry.confidence));
-      });
+    if (start) {
+      const randomIndex = getRandomIndex(data);
+      setData(
+        data.map((entry, index) =>
+          index === randomIndex
+            ? {
+                ...entry,
+                value: entry.value + 10,
+              }
+            : entry
+        )
+      );
+      setIteration(iteration + 1);
     }
   }, 500);
-  return (
-    <React.Fragment>
-      <h1>
-        {" "}
-        are you holding the mug <br />
-        <small>
-          [{gaugeData[0].toFixed(2)},{gaugeData[1].toFixed(2)}]
-        </small>
-      </h1>
-      <GaugeChart data={gaugeData} />
-      <button onClick={() => setShouldClassify(!shouldClassify)}>
-        {shouldClassify ? "Stop" : "Start"}
-      </button>
-      <video
-        ref={videoRef}
-        style={{ transform: "scale(-1,1)" }}
-        width="300"
-        height="150"
-      />
-    </React.Fragment>
-  );
+
+  return (<React.Fragment>
+    <h1>Racing Bar Chart</h1>
+    <RacingBarChart data = {data}/>
+    <button onClick={()=>setStart(!start)}>
+      {start?'Stop Race':'Start Race'}
+    </button>
+    <p>{iteration}</p>
+  </React.Fragment>);
 }
 
 export default App;
