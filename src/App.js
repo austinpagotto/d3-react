@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ForceTreeChart from './Components/ForceTreeChart'
 import TreeChart from './Components/TreeChart'
 import "./App.css";
 
@@ -30,6 +31,8 @@ function App() {
 
   return (
     <React.Fragment>
+      <h1>Force Layour</h1>
+      <ForceTreeChart data={data}/>
       <h1>Animated Tree Chart</h1>
       <TreeChart data={data} />
       <button onClick={() => setData(initialData.children[0])}>
