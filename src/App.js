@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import StackedBarChart from "./Components/StackedBarChart";
+import StackedAreaChart from "./Components/StackedAreaChart";
 import "./App.css";
 
 const data = [
@@ -49,6 +50,7 @@ function App() {
     <React.Fragment>
       <h2>Stacked Bar Chart</h2>
       <StackedBarChart data={data} keys={keys} colors={colors} />
+      <StackedAreaChart data={data} keys={keys} colors={colors} />
       <div className="fields">
         {allKeys.map((key) => (
           <div key={key} className="field">
