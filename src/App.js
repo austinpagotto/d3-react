@@ -1,77 +1,16 @@
 import React, { useState } from "react";
-import StackedBarChart from "./Components/StackedBarChart";
-import StackedAreaChart from "./Components/StackedAreaChart";
+import Finale from './Components/Finale'
 import "./App.css";
 
-const data = [
-  {
-    year: 1980,
-    "🥑": 10,
-    "🍌": 20,
-    "🍆": 30,
-  },
-  {
-    year: 1990,
-    "🥑": 20,
-    "🍌": 40,
-    "🍆": 60,
-  },
-  {
-    year: 2000,
-    "🥑": 30,
-    "🍌": 45,
-    "🍆": 80,
-  },
-  {
-    year: 2010,
-    "🥑": 40,
-    "🍌": 60,
-    "🍆": 100,
-  },
-  {
-    year: 2020,
-    "🥑": 50,
-    "🍌": 80,
-    "🍆": 120,
-  },
-];
-
-const allKeys = ["🥑", "🍌", "🍆"];
-
-const colors = {
-  "🥑": "green",
-  "🍌": "orange",
-  "🍆": "purple",
-};
-
 function App() {
-  const [keys, setKeys] = useState(allKeys);
+  const [data, setData] = useState([10, 25, 50, 30, 120]);
   return (
     <React.Fragment>
-      <h2>Stacked Bar Chart</h2>
-      <StackedBarChart data={data} keys={keys} colors={colors} />
-      <StackedAreaChart data={data} keys={keys} colors={colors} />
-      <div className="fields">
-        {allKeys.map((key) => (
-          <div key={key} className="field">
-            <input
-              id={key}
-              type="checkbox"
-              checked={keys.includes(key)}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setKeys(Array.from(new Set([...keys, key])));
-                } else {
-                  setKeys(keys.filter((_key) => _key !== key));
-                }
-              }}
-            />
-            <label htmlFor={key} style={{ color: colors[key] }}>
-              {key}
-            </label>
-          </div>
-        ))}
-      </div>
+      <h2>Using React (Hooks) with D3: Finale </h2>
+      <Finale data={data} />
+      <button onClick={() => setData(data.map(value => value + 5))}>
+        Update data
+      </button>
     </React.Fragment>
   );
 }
